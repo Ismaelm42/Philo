@@ -19,7 +19,8 @@ void	*routine(void *arg)
 	philo = (t_philo *)arg;
 	pthread_mutex_lock(philo->var->mutex);
 	gettimeofday(&philo->var->t_start, NULL);
-	putnbr(philo->n_philo);
+	//printf("t_start = %ln\n", &philo->var->t_start.tv_usec);
+	// putnbr(philo->n_philo);
 	write(1, "\n", 1);
 	gettimeofday(&philo->var->t_end, NULL);
 	get_time(philo);

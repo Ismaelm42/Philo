@@ -71,6 +71,8 @@ void	get_time(t_philo *philo);
 	// 1s = 1000 ms;		milisegundos
 	// 1s = 1000000 us;		microsegundos
 
-	//plan
-//create an array of pthreads
-//create a routine (use of pthread join too)
+//Crear funciones para eat, sleep, think.
+//Think es una función de espera en la que se puede quedar el filo si su tenedor lo están utilizando.
+//Será necesario otro mutex en la struct para proteger el estado de los tenedores.
+//Cómo recoger el tiempo? Debería ser un sumatorio con el total del tiempo transcurrido hasta comer y memset.
+
