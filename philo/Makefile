@@ -12,7 +12,10 @@
 
 NAME = philo
 
-SRC =	philo.c		\
+SRC =	main.c				\
+		philo.c				\
+		philo_parse.c		\
+		philo_utils.c		\
 
 OBJT = $(SRC:.c=.o)
 
@@ -25,7 +28,7 @@ RM = rm -f
 MAKEFLAGS += --quiet
 
 all: $(NAME)
-	clean
+	$(MAKE) clean
 
 $(NAME): $(OBJT)
 	$(CC) $(CFLAGS) $(SRC) -o $(NAME)
