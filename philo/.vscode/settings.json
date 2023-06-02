@@ -1,0 +1,10 @@
+{
+	"files.associations": {
+		"philo.h": "c",
+		"__config": "c",
+		"atomic": "c",
+		"bitset": "c",
+		"locale": "c",
+		"algorithm": "c"
+	}
+}

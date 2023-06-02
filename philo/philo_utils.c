@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/02 11:12:07 by imoro-sa          #+#    #+#             */
+/*   Updated: 2023/06/02 11:26:07 by imoro-sa         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 int	print(char *str, int fd, int exit)
@@ -11,7 +23,7 @@ int	print(char *str, int fd, int exit)
 	return (exit);
 }
 
-int	ctrl_atoi(char *str, int *flag)
+long	ctrl_atoi(char *str, int *flag)
 {
 	int		i;
 	long	sum;
@@ -29,9 +41,9 @@ int	ctrl_atoi(char *str, int *flag)
 		sum = sum * 10 + str[i] - '0';
 		i++;
 	}
-	if (sum > 1000)
-		sum = 1000;
-	return ((int)sum);
+	if (sum > 200)
+		sum = 200;
+	return (sum);
 }
 	//Capado a 1000 filosofos.
 	//Si lo mantengo hasta el valor max de un int da segmentation fault.
@@ -43,7 +55,7 @@ void	ft_free(t_philo *philo)
 	free(philo);
 }
 
-void	putnbr(int time)
+void	putnbr(long time)
 {
 	char	c;
 
@@ -62,9 +74,9 @@ void	putnbr(int time)
 
 void	get_time(t_philo *philo)
 {
-	int	t_sec;
-	int	t_usec;
-	int	t;
+	long	t_sec;
+	long	t_usec;
+	long	t;
 
 	t_sec = (philo->var->t_end.tv_sec - philo->var->t_start.tv_sec) * 1000;
 	t_usec = philo->var->t_end.tv_usec - philo->var->t_start.tv_usec;

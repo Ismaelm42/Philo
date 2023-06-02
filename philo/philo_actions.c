@@ -1,29 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   philo_actions.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/02 11:59:04 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/02 11:59:05 by imoro-sa         ###   ########.fr       */
+/*   Created: 2023/06/02 12:43:40 by imoro-sa          #+#    #+#             */
+/*   Updated: 2023/06/02 14:50:35 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	main(int argc, char **argv)
+void	eating(t_philo *philo)
 {
-	t_var	*var;
-	t_philo	*philo;
+	//bloquear mutex tenedor x && x + 1;
+	//imprimir estado philo en ms;
+	//usleep philo->var->t_eat;
+	//desbloquear mutex tenedor x && x + 1;
+}
 
-	if (argc < 5)
-		return (print(ARG_ERRN, 2, EXIT_FAILURE));
-	var = struct_init_var(argc, argv);
-	if (var->flag == -1 || var->n_philos == 0)
-		return (free(var), print(ARG_ERR, STDERR_FILENO, EXIT_FAILURE));
-	philo = struct_init_philo(var);
-	if (thread_init(philo, var) != 0)
-		return (ft_free(philo), print(THRD_ERR, STDERR_FILENO, EXIT_FAILURE));
-	return (0);
+void	sleeping(t_philo *philo)
+{
+	// imprimir estado philo en ms;
+	// usleep philo->var->t_sleep;
+}
+
+void	thinking(t_philo *philo)
+{
+	// imprimir estado philo en ms;
+	// usleep (¿tiempo?);
 }

@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 10:35:45 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/05/26 10:51:05 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/02 14:50:09 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,9 @@ void	*routine(void *arg)
 	t_philo		*philo;
 
 	philo = (t_philo *)arg;
-	pthread_mutex_lock(philo->var->mutex);
-	gettimeofday(&philo->var->t_start, NULL);
-	//printf("t_start = %ln\n", &philo->var->t_start.tv_usec);
-	// putnbr(philo->n_philo);
-	write(1, "\n", 1);
-	gettimeofday(&philo->var->t_end, NULL);
-	get_time(philo);
-	pthread_mutex_unlock(philo->var->mutex);
-	return (NULL);
+	eating(philo);
+	sleeping(philo);
+	thinking(philo);
 }
 //Mutex no funciona. Probar a iniciarlos antes de pthread_create.
 
@@ -33,7 +27,7 @@ int	thread_init(t_philo *philo, t_var *var)
 {
 	int				i;
 
-	pthread_mutex_init(philo->var->mutex, NULL);
+	pthread_mutex_init(philo->var->write_mutex, NULL);
 	i = 0;
 	while (i < var->n_philos)
 	{
@@ -49,8 +43,7 @@ int	thread_init(t_philo *philo, t_var *var)
 			return (EXIT_FAILURE);
 		i++;
 	}
-	pthread_mutex_destroy(philo->var->mutex);
+	pthread_mutex_destroy(philo->var->write_mutex);
 	return (EXIT_SUCCESS);
 }
 //No estoy trabajando con ** en pthread_create. No debería suponer problema.
-

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo_parse.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/02 11:12:13 by imoro-sa          #+#    #+#             */
+/*   Updated: 2023/06/02 11:58:26 by imoro-sa         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 t_var	*struct_init_var(int argc, char **argv)
@@ -5,7 +17,7 @@ t_var	*struct_init_var(int argc, char **argv)
 	t_var	*var;
 
 	var = (t_var *) malloc(sizeof(t_var));
-	var->mutex = (pthread_mutex_t *) malloc (sizeof(pthread_mutex_t));
+	var->write_mutex = (pthread_mutex_t *) malloc (sizeof(pthread_mutex_t));
 	var->flag = 1;
 	var->n_philos = ctrl_atoi(argv[1], &var->flag);
 	var->t_death = ctrl_atoi(argv[2], &var->flag);
@@ -27,7 +39,8 @@ t_philo	*struct_init_philo(t_var *var)
 	while (i < var->n_philos)
 	{
 		philo[i].n_philo = i + 1;
-		philo[i].n_fork = i + 1;
+		philo[i].n_forks = i + 1;
+		pthread_mutex_init(philo[i].fork_mutex, NULL);
 		philo[i].var = var;
 		i++;
 	}

@@ -6,7 +6,7 @@
 #    By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/26 10:35:40 by imoro-sa          #+#    #+#              #
-#    Updated: 2023/05/26 10:43:18 by imoro-sa         ###   ########.fr        #
+#    Updated: 2023/06/02 12:43:30 by imoro-sa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ SRC =	main.c				\
 		philo.c				\
 		philo_parse.c		\
 		philo_utils.c		\
+		philo_actions.c		\
 
 OBJT = $(SRC:.c=.o)
 
