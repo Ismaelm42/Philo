@@ -75,20 +75,14 @@ long	get_time(t_philo *philo)
 	long	time_usec;
 	long	time;
 
+	memset(&philo->life_time->t_end, 0, sizeof(struct timeval));
 	gettimeofday(&philo->life_time->t_end, NULL);
 	if (philo->life_time->t_start.tv_usec == 0)
 		return (0);
-	time_sec = philo->life_time->t_end.tv_sec \
-		- philo->life_time->t_start.tv_sec;
-	time_usec = philo->life_time->t_end.tv_usec \
-		- philo->life_time->t_start.tv_usec;
-	if (time_usec < 0)
-	{
-		time_sec -= 1;
-		time_usec += 1000000;
-	}
+	time_sec = philo->life_time->t_end.tv_sec - philo->life_time->t_start.tv_sec;
+	time_usec = philo->life_time->t_end.tv_usec - philo->life_time->t_start.tv_usec;
 	time = time_sec * 1000 + time_usec / 1000;
-	if (time > philo->var->t_death)
+	if (time >= philo->var->t_death)
 		{
 			pthread_mutex_lock(philo->var->write_mutex);
 

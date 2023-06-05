@@ -57,7 +57,6 @@ t_philo	*struct_init_philo(t_var *var)
 	{
 		philo[i].n_philo = i + 1;
 		philo[i].n_fork = i + 1;
-		philo[i].birth_time = 0;
 		philo[i].life_time = &life_time[i];
 		philo[i].var = var;
 		i++;

@@ -75,6 +75,7 @@ void	*life_tracker(void *arg)
 	{
 		if (i == philo->var->n_philos)
 			i = 0;
+		usleep (1000 / philo->var->n_philos);
 		tracker = get_time(&philo[i]);
 		if (tracker > 98)
 		{
@@ -94,3 +95,5 @@ void	*life_tracker(void *arg)
 }
 //Realizar un usleep de 2ms para imprimir el mensaje died el último.
 //Simplificar el índice? Confunde y tengo que emplear dos líneas en ubicarlo.
+//La función Usleep en este bucle ejecuta una vuelta entera en 1 ms.
+//Usleep evita errores en las restas de get_time.

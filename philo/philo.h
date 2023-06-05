@@ -50,7 +50,6 @@ typedef struct t_philo
 	long				time_sec;
 	long				time_usec;
 	long				time_mark;
-	long				birth_time;
 	t_time				*life_time;
 	pthread_t			thread;
 	t_var				*var;
