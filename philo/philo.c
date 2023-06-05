@@ -12,27 +12,35 @@
 
 #include "philo.h"
 
-void	*routine(void *arg)
+void	*thread_routine(void *arg)
 {
 	t_philo		*philo;
 
 	philo = (t_philo *)arg;
-	eating(philo);
-	sleeping(philo);
-	thinking(philo);
+	while (philo->var->flag != 0)
+	{
+		take_fork(philo);
+		eating(philo);
+		sleeping(philo);
+		thinking(philo);
+	}
+	return (NULL);
 }
-//Mutex no funciona. Probar a iniciarlos antes de pthread_create.
+//Si pongo la condición dentro de cada función se cumplirá dentro también.
 
 int	thread_init(t_philo *philo, t_var *var)
 {
-	int				i;
+	pthread_t	tracker;
+	int			i;
 
 	pthread_mutex_init(philo->var->write_mutex, NULL);
+	pthread_create(&tracker, NULL, &life_tracker, philo);
+	gettimeofday(&philo->var->time.t_start, NULL);
 	i = 0;
 	while (i < var->n_philos)
 	{
 		if (pthread_create(&philo[i].thread, NULL, \
-			&routine, &philo[i]) == -1)
+			&thread_routine, &philo[i]) == -1)
 			return (EXIT_FAILURE);
 		i++;
 	}
@@ -43,7 +51,9 @@ int	thread_init(t_philo *philo, t_var *var)
 			return (EXIT_FAILURE);
 		i++;
 	}
+	pthread_join(tracker, (void *)philo);
 	pthread_mutex_destroy(philo->var->write_mutex);
 	return (EXIT_SUCCESS);
 }
 //No estoy trabajando con ** en pthread_create. No debería suponer problema.
+//pthread_join(tracker...) debe estar al final, si no da resultados raros.

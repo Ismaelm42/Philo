@@ -23,6 +23,13 @@
 # define ARG_ERR "invalid arguments\n"
 # define THRD_ERR "thread failed\n"
 
+typedef struct s_time
+{
+	struct timeval		t_start;
+	struct timeval		t_end;
+
+}						t_time;
+
 typedef struct s_var
 {
 	long				n_philos;
@@ -31,22 +38,26 @@ typedef struct s_var
 	long				t_sleep;
 	long				n_eat;
 	int					flag;
-	struct timeval		t_start;
-	struct timeval		t_end;
+	t_time				time;
 	pthread_mutex_t		*write_mutex;
+	pthread_mutex_t		*fork_mutex;
 }						t_var;
 
 typedef struct t_philo
 {
 	int					n_philo;
-	int					n_forks;
+	int					n_fork;
+	long				time_sec;
+	long				time_usec;
+	long				time_mark;
+	long				birth_time;
+	t_time				*life_time;
 	pthread_t			thread;
-	pthread_mutex_t		*fork_mutex;
 	t_var				*var;
 }						t_philo;
 
 	//philo
-void		*routine(void *arg);
+void		*thread_routine(void *arg);
 int			thread_init(t_philo *philo, t_var *var);
 
 	//philo_parse
@@ -54,16 +65,19 @@ t_var		*struct_init_var(int argc, char **argv);
 t_philo		*struct_init_philo(t_var *var);
 
 	//philo_parse_utils
-int			print(char *str, int fd, int exit);
-long		ctrl_atoi(char *str, int *flag);
-void		ft_free(t_philo *philo);
-void		putnbr(long time);
-void		get_time(t_philo *philo);
+int			error(char *str);
+long		long_atoi(char *str, int *flag);
+void		deallocate(t_philo *philo);
+void		timestamp(t_philo *philo, char *message);
+long		get_time(t_philo *philo);
 
 	//philo_actions
+void		take_fork(t_philo *philo);
 void		eating(t_philo *philo);
 void		sleeping(t_philo *philo);
 void		thinking(t_philo *philo);
+void		*life_tracker(void *arg);
+
 
 #endif
 
@@ -90,4 +104,17 @@ void		thinking(t_philo *philo);
 // 	get_time(philo);
 // 	pthread_mutex_unlock(philo->var->write_mutex);
 // 	return (NULL);
+// }
+
+
+// void	eating(t_philo *philo)
+// {
+// 	pthread_mutex_init(&philo->var->fork_mutex[philo->n_philo], NULL);
+// 	pthread_mutex_init(&philo->var->fork_mutex[philo->n_philo + 1], NULL);
+// 	pthread_mutex_init(philo->var->write_mutex, NULL);
+// 	printf("get_time-> %d is eating\n", philo->n_philo);
+// 	pthread_mutex_destroy(philo->var->write_mutex);
+// 	usleep((long)&philo->var->t_eat);
+// 	pthread_mutex_destroy(&philo->var->fork_mutex[philo->n_philo]);
+// 	pthread_mutex_destroy(&philo->var->fork_mutex[philo->n_philo + 1]);
 // }

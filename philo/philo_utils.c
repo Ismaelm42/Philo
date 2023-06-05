@@ -12,18 +12,18 @@
 
 #include "philo.h"
 
-int	print(char *str, int fd, int exit)
+int	error(char *str)
 {
 	int	len;
 
 	len = 0;
 	while (str[len] != 0)
 		len++;
-	write(fd, str, len);
-	return (exit);
+	write(2, str, len);
+	return (EXIT_FAILURE);
 }
 
-long	ctrl_atoi(char *str, int *flag)
+long	long_atoi(char *str, int *flag)
 {
 	int		i;
 	long	sum;
@@ -41,46 +41,68 @@ long	ctrl_atoi(char *str, int *flag)
 		sum = sum * 10 + str[i] - '0';
 		i++;
 	}
-	if (sum > 200)
-		sum = 200;
 	return (sum);
 }
-	//Capado a 1000 filosofos.
 	//Si lo mantengo hasta el valor max de un int da segmentation fault.
-	//Debería ser un atoi_long en principio.
 
-void	ft_free(t_philo *philo)
+void	deallocate(t_philo *philo)
 {
+	free(philo->var->write_mutex);
+	free(philo->var->fork_mutex);
+	free(philo->life_time);
 	free(philo->var);
 	free(philo);
 }
 
-void	putnbr(long time)
+void	timestamp(t_philo *philo, char *message)
 {
-	char	c;
-
-	if (time > 9)
-	{
-		putnbr(time / 10);
-		putnbr(time % 10);
-	}
-	else
-	{
-		c = time + '0';
-		write (1, &c, 1);
-	}
+	pthread_mutex_lock(philo->var->write_mutex);
+	memset(&philo->var->time.t_end, 0, sizeof(struct timeval));
+	gettimeofday(&philo->var->time.t_end, NULL);
+	philo->time_sec = philo->var->time.t_end.tv_sec \
+		- philo->var->time.t_start.tv_sec;
+	philo->time_usec = philo->var->time.t_end.tv_usec \
+		- philo->var->time.t_start.tv_usec;
+	philo->time_mark = philo->time_sec * 1000 + philo->time_usec / 1000;
+	printf("\x1b[36m%ld ms\x1b[0m\t|%d|\t%s\n", philo->time_mark, philo->n_philo, message);
+	pthread_mutex_unlock(philo->var->write_mutex);
 }
-	//Comprobar el max int?
+	//gettimeofday de life_time tmb y así aprovechar el mismo mutex.
 
-void	get_time(t_philo *philo)
+long	get_time(t_philo *philo)
 {
-	long	t_sec;
-	long	t_usec;
-	long	t;
+	long	time_sec;
+	long	time_usec;
+	long	time;
 
-	t_sec = (philo->var->t_end.tv_sec - philo->var->t_start.tv_sec) * 1000;
-	t_usec = philo->var->t_end.tv_usec - philo->var->t_start.tv_usec;
-	t = t_sec + t_usec;
-	putnbr(t);
-	print("ms \n", STDOUT_FILENO, EXIT_SUCCESS);
+	gettimeofday(&philo->life_time->t_end, NULL);
+	if (philo->life_time->t_start.tv_usec == 0)
+		return (0);
+	time_sec = philo->life_time->t_end.tv_sec \
+		- philo->life_time->t_start.tv_sec;
+	time_usec = philo->life_time->t_end.tv_usec \
+		- philo->life_time->t_start.tv_usec;
+	if (time_usec < 0)
+	{
+		time_sec -= 1;
+		time_usec += 1000000;
+	}
+	time = time_sec * 1000 + time_usec / 1000;
+	if (time > philo->var->t_death)
+		{
+			pthread_mutex_lock(philo->var->write_mutex);
+
+			printf("time_sec_start = %ld\n", philo->life_time->t_start.tv_sec);
+			printf("time_sec_end = %ld\n", philo->life_time->t_end.tv_sec);
+			printf("time_usec_start = %ld\n", philo->life_time->t_start.tv_usec);
+			printf("time_usec_end = %ld\n\n", philo->life_time->t_end.tv_usec);
+
+			printf("time_sec = %ld\n", time_sec);
+			printf("time_usec = %ld\n", time_usec);
+			printf("time = %ld\n\n", time);
+
+			printf("%d tracker = %ld\n", philo->n_philo, time);
+			pthread_mutex_unlock(philo->var->write_mutex);
+		}
+	return (time);
 }
