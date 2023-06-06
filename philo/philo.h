@@ -50,6 +50,7 @@ typedef struct t_philo
 	long				time_sec;
 	long				time_usec;
 	long				time_mark;
+	long				eat_counter;
 	t_time				*life_time;
 	pthread_t			thread;
 	t_var				*var;
@@ -57,11 +58,11 @@ typedef struct t_philo
 
 	//philo
 void		*thread_routine(void *arg);
-int			thread_init(t_philo *philo, t_var *var);
 
 	//philo_parse
 t_var		*struct_init_var(int argc, char **argv);
 t_philo		*struct_init_philo(t_var *var);
+int			thread_init(t_philo *philo, t_var *var);
 
 	//philo_parse_utils
 int			error(char *str);
@@ -71,7 +72,6 @@ void		timestamp(t_philo *philo, char *message);
 long		get_time(t_philo *philo);
 
 	//philo_actions
-void		take_fork(t_philo *philo);
 void		eating(t_philo *philo);
 void		sleeping(t_philo *philo);
 void		thinking(t_philo *philo);

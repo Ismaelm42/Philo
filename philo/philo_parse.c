@@ -58,9 +58,39 @@ t_philo	*struct_init_philo(t_var *var)
 		philo[i].n_philo = i + 1;
 		philo[i].n_fork = i + 1;
 		philo[i].life_time = &life_time[i];
+		philo[i].eat_counter = 0;
 		philo[i].var = var;
 		i++;
 	}
 	return (philo);
 }
 //times_philos_eat devuelve -1 cuando no se ha introducido ningún valor.
+
+int	thread_init(t_philo *philo, t_var *var)
+{
+	pthread_t	tracker;
+	int			i;
+
+	pthread_mutex_init(philo->var->write_mutex, NULL);
+	pthread_create(&tracker, NULL, &life_tracker, philo);
+	gettimeofday(&philo->var->time.t_start, NULL);
+	i = 0;
+	while (i < var->n_philos)
+	{
+		if (pthread_create(&philo[i].thread, NULL, \
+			&thread_routine, &philo[i]) == -1)
+			return (EXIT_FAILURE);
+		i++;
+	}
+	i = 0;
+	while (i < var->n_philos)
+	{
+		if (pthread_join(philo[i].thread, NULL) == -1)
+			return (EXIT_FAILURE);
+		i++;
+	}
+	if (pthread_join(tracker, NULL) == -1)
+		return (EXIT_FAILURE);
+	pthread_mutex_destroy(philo->var->write_mutex);
+	return (EXIT_SUCCESS);
+}

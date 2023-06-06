@@ -64,7 +64,7 @@ void	timestamp(t_philo *philo, char *message)
 	philo->time_usec = philo->var->time.t_end.tv_usec \
 		- philo->var->time.t_start.tv_usec;
 	philo->time_mark = philo->time_sec * 1000 + philo->time_usec / 1000;
-	printf("\x1b[36m%ld ms\x1b[0m\t|%d|\t%s\n", philo->time_mark, philo->n_philo, message);
+	printf("%ld ms\t%d %s\n", philo->time_mark, philo->n_philo, message);
 	pthread_mutex_unlock(philo->var->write_mutex);
 }
 	//gettimeofday de life_time tmb y así aprovechar el mismo mutex.
@@ -78,25 +78,21 @@ long	get_time(t_philo *philo)
 	memset(&philo->life_time->t_end, 0, sizeof(struct timeval));
 	gettimeofday(&philo->life_time->t_end, NULL);
 	if (philo->life_time->t_start.tv_usec == 0)
-		return (0);
-	time_sec = philo->life_time->t_end.tv_sec - philo->life_time->t_start.tv_sec;
-	time_usec = philo->life_time->t_end.tv_usec - philo->life_time->t_start.tv_usec;
+	{
+		time_sec = philo->life_time->t_end.tv_sec \
+			- philo->var->time.t_start.tv_sec;
+		time_usec = philo->life_time->t_end.tv_usec \
+			- philo->var->time.t_start.tv_usec;
+	}
+	else
+	{
+		time_sec = philo->life_time->t_end.tv_sec \
+			- philo->life_time->t_start.tv_sec;
+		time_usec = philo->life_time->t_end.tv_usec \
+			- philo->life_time->t_start.tv_usec;
+	}
 	time = time_sec * 1000 + time_usec / 1000;
-	if (time >= philo->var->t_death)
-		{
-			pthread_mutex_lock(philo->var->write_mutex);
-
-			printf("time_sec_start = %ld\n", philo->life_time->t_start.tv_sec);
-			printf("time_sec_end = %ld\n", philo->life_time->t_end.tv_sec);
-			printf("time_usec_start = %ld\n", philo->life_time->t_start.tv_usec);
-			printf("time_usec_end = %ld\n\n", philo->life_time->t_end.tv_usec);
-
-			printf("time_sec = %ld\n", time_sec);
-			printf("time_usec = %ld\n", time_usec);
-			printf("time = %ld\n\n", time);
-
-			printf("%d tracker = %ld\n", philo->n_philo, time);
-			pthread_mutex_unlock(philo->var->write_mutex);
-		}
 	return (time);
 }
+//El if añade la condición cuando life_time no ha sido aún inicializado y se toma el
+//tiempo del comienzo del programa como referencia.
