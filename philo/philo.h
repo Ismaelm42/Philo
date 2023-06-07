@@ -72,6 +72,7 @@ void		timestamp(t_philo *philo, char *message);
 long		get_time(t_philo *philo);
 
 	//philo_actions
+void		taking_forks(t_philo *philo);
 void		eating(t_philo *philo);
 void		sleeping(t_philo *philo);
 void		thinking(t_philo *philo);
@@ -83,37 +84,18 @@ void		*life_tracker(void *arg);
 	// 1s = 1000 ms;		milisegundos
 	// 1s = 1000000 us;		microsegundos
 
-//Crear funciones para eat, sleep, think.
-//Think es una función de espera en la que se puede quedar el filo si su tenedor lo están utilizando.
-//Será necesario otro mutex en la struct para proteger el estado de los tenedores.
-//Cómo recoger el tiempo? Debería ser un sumatorio con el total del tiempo transcurrido hasta comer y memset.
-//Utilizar una función para realizar el write
+//Pruebas:
 
+//1 800 200 200 -> Not eat and die.
 
-// void	*routine(void *arg)
-// {
-// 	t_philo		*philo;
+//5 800 200 200 -> No philosopher shoud die.
 
-// 	philo = (t_philo *)arg;
-// 	pthread_mutex_lock(philo->var->write_mutex);
-// 	gettimeofday(&philo->var->t_start, NULL);
-// 	putnbr(philo->n_philo);
-// 	write(1, "\n", 1);
-// 	gettimeofday(&philo->var->t_end, NULL);
-// 	get_time(philo);
-// 	pthread_mutex_unlock(philo->var->write_mutex);
-// 	return (NULL);
-// }
+//5 800 200 200 7 -> No philosopher shoud die and simulation stops at 7 meals.
 
+//4 410 200 200 -> No philosopher should die.
 
-// void	eating(t_philo *philo)
-// {
-// 	pthread_mutex_init(&philo->var->fork_mutex[philo->n_philo], NULL);
-// 	pthread_mutex_init(&philo->var->fork_mutex[philo->n_philo + 1], NULL);
-// 	pthread_mutex_init(philo->var->write_mutex, NULL);
-// 	printf("get_time-> %d is eating\n", philo->n_philo);
-// 	pthread_mutex_destroy(philo->var->write_mutex);
-// 	usleep((long)&philo->var->t_eat);
-// 	pthread_mutex_destroy(&philo->var->fork_mutex[philo->n_philo]);
-// 	pthread_mutex_destroy(&philo->var->fork_mutex[philo->n_philo + 1]);
-// }
+//4 310 200 100 -> One philosopher should die.
+
+//Check 2 philosophers.
+
+//Organizar los filos en la primera vuelta para los filos pares e impares.

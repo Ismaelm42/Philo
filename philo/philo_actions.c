@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-void	eating(t_philo *philo)
+void	taking_forks(t_philo *philo)
 {
 	int	next_philo;
 
@@ -23,7 +23,25 @@ void	eating(t_philo *philo)
 			next_philo = 0;
 		pthread_mutex_lock(&philo->var->fork_mutex[philo->n_philo - 1]);
 		pthread_mutex_lock(&philo->var->fork_mutex[next_philo]);
-		timestamp(philo, "has taken a fork");
+		if (philo->var->flag != 0)
+			timestamp(philo, "has taken a fork");
+		else
+		{
+			pthread_mutex_unlock(&philo->var->fork_mutex[philo->n_philo - 1]);
+			pthread_mutex_unlock(&philo->var->fork_mutex[next_philo]);
+		}
+	}
+}
+
+void	eating(t_philo *philo)
+{
+	int	next_philo;
+
+	if (philo->var->flag != 0)
+	{
+		next_philo = philo->n_philo;
+		if (philo->n_philo == philo->var->n_philos)
+			next_philo = 0;
 		memset((void *)&philo->life_time->t_start, 0, sizeof(struct timeval));
 		gettimeofday(&philo->life_time->t_start, NULL);
 		timestamp(philo, "is eating");
@@ -35,7 +53,7 @@ void	eating(t_philo *philo)
 }
 
 void	sleeping(t_philo *philo)
-{
+{	
 	if (philo->var->flag != 0)
 	{
 		timestamp(philo, "is sleeping");
@@ -66,6 +84,11 @@ void	*life_tracker(void *arg)
 			i = 0;
 		usleep (1000 / philo->var->n_philos);
 		tracker = get_time(&philo[i]);
+
+		pthread_mutex_lock(philo->var->write_mutex);
+		//printf("tracker phil %d = %ld\n", philo[i].n_philo, tracker);
+		pthread_mutex_unlock(philo->var->write_mutex);
+
 		if (philo[i].eat_counter == philo->var->n_eat)
 			counter++;
 		i++;
@@ -75,9 +98,10 @@ void	*life_tracker(void *arg)
 		i = 1;
 	if (tracker >= philo->var->t_death)
 		timestamp(&philo[i - 1], "died");
-	return ((void *)philo);
+	return (NULL);
 }
 //Realizar un usleep de 2ms para imprimir el mensaje died el último.
 //La función Usleep en este bucle ejecuta una vuelta entera en 1 ms.
-//Usleep evita errores en las restas de get_time.
+//Usleep evita errores en las restas de get_time que hacen que el tiempo
+//supere el máximo cuando no lo hace.
 //Destruir array de mutex.

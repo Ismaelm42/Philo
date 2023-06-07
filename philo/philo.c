@@ -19,6 +19,7 @@ void	*thread_routine(void *arg)
 	philo = (t_philo *)arg;
 	while (philo->var->flag != 0)
 	{
+		taking_forks(philo);
 		eating(philo);
 		sleeping(philo);
 		thinking(philo);
