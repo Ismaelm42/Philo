@@ -101,3 +101,6 @@ void		*life_tracker(void *arg);
 //Organizar los filósofos en la primera vuelta en pares e impares.
 //Comprobar varios casos con 2 filósofos y arreglar el problema con 1 filósofo.
 //Destruír los fork_mutex dentro de un bucle while.
+//Aumentar el tiempo en de 2 a 5ms para imprimir la muerte con usleep.
+//Ver si es necesario implementar una nueva función para gestionar el incremento
+//de la función usleep.
