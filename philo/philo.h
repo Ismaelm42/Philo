@@ -98,4 +98,6 @@ void		*life_tracker(void *arg);
 
 //Check 2 philosophers.
 
-//Organizar los filos en la primera vuelta para los filos pares e impares.
+//Organizar los filósofos en la primera vuelta en pares e impares.
+//Comprobar varios casos con 2 filósofos y arreglar el problema con 1 filósofo.
+//Destruír los fork_mutex dentro de un bucle while.
