@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 10:35:49 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/08 14:20:52 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/08 19:17:06 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ void		*thread_routine(void *arg);
 void		*life_tracker(void *arg);
 void		timestamp(t_philo *philo, char *message);
 long		get_time(t_philo *philo);
+void		sleep_for(t_philo *philo, long milliseconds);
 
 //philo_parse_utils
 int			error(char *str);

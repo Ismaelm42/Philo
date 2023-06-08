@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:43:40 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/08 17:41:33 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/08 19:20:08 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	eating(t_philo *philo)
 		memset((void *)&philo->life_time->t_start, 0, sizeof(struct timeval));
 		gettimeofday(&philo->life_time->t_start, NULL);
 		timestamp(philo, "is eating");
-		usleep((philo->var->t_eat * 1000));
+		sleep_for(philo, philo->var->t_eat * 1000);/////////////////////////////
 		philo->eat_counter++;
 		pthread_mutex_unlock(&philo->var->fork_mtx[philo->n_philo - 1]);
 		pthread_mutex_unlock(&philo->var->fork_mtx[next_philo]);
@@ -62,7 +62,7 @@ void	sleeping(t_philo *philo)
 	if (philo->var->flag != 0)
 	{
 		timestamp(philo, "is sleeping");
-		usleep(philo->var->t_sleep * 1000);
+		usleep(philo->var->t_sleep * 1000);///////////////////////////////////
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 13:10:34 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/08 17:42:57 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/08 19:17:11 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,23 @@ long	get_time(t_philo *philo)
 	return (time);
 }
 
-void	sleep(long microseconds)
+void	sleep_for(t_philo *philo, long milliseconds)
 {
-		
+	struct timeval	t_start;
+	struct timeval	t_end;
+	long			time;
+
+	time = 0;
+	gettimeofday(&t_start, NULL);
+	while (time < milliseconds)
+	{
+		if (philo->var->flag == 0)
+			break ;
+		usleep(200);
+		if (philo->var->flag == 0)
+			break ;
+		gettimeofday(&t_end, NULL);
+		time = (t_end.tv_sec - t_start.tv_sec) * 1000 \
+			+ (t_end.tv_usec - t_start.tv_usec) * 1000;
+	}
 }
