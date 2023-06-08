@@ -6,17 +6,16 @@
 #    By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/26 10:35:40 by imoro-sa          #+#    #+#              #
-#    Updated: 2023/06/02 12:43:30 by imoro-sa         ###   ########.fr        #
+#    Updated: 2023/06/08 13:13:45 by imoro-sa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 
-SRC =	main.c				\
-		philo.c				\
-		philo_parse.c		\
+SRC =	philo.c				\
+		philo_status.c		\
 		philo_utils.c		\
-		philo_actions.c		\
+		philo_parse_utils.c	\
 
 OBJT = $(SRC:.c=.o)
 

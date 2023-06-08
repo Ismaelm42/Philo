@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 10:35:49 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/02 14:57:00 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/08 14:20:52 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ typedef struct s_var
 	long				n_eat;
 	int					flag;
 	t_time				time;
-	pthread_mutex_t		*write_mutex;
-	pthread_mutex_t		*fork_mutex;
+	pthread_mutex_t		*write_mtx;
+	pthread_mutex_t		*fork_mtx;
 }						t_var;
 
 typedef struct t_philo
@@ -56,28 +56,32 @@ typedef struct t_philo
 	t_var				*var;
 }						t_philo;
 
-	//philo
-void		*thread_routine(void *arg);
-
-	//philo_parse
+//philo
 t_var		*struct_init_var(int argc, char **argv);
 t_philo		*struct_init_philo(t_var *var);
-int			thread_init(t_philo *philo, t_var *var);
+int			thread_init(t_philo *philo);
+int			thread_join(t_philo *philo, pthread_t tracker);
+int			main(int argc, char **argv);
 
-	//philo_parse_utils
-int			error(char *str);
-long		long_atoi(char *str, int *flag);
-void		deallocate(t_philo *philo);
-void		timestamp(t_philo *philo, char *message);
-long		get_time(t_philo *philo);
-
-	//philo_actions
+//philo_status
 void		taking_forks(t_philo *philo);
 void		eating(t_philo *philo);
 void		sleeping(t_philo *philo);
 void		thinking(t_philo *philo);
-void		*life_tracker(void *arg);
+void		*thread_routine(void *arg);
 
+//philo_utils
+void		*life_tracker(void *arg);
+void		timestamp(t_philo *philo, char *message);
+long		get_time(t_philo *philo);
+
+//philo_parse_utils
+int			error(char *str);
+long		long_atoi(char *str, int *flag);
+void		deallocate(t_philo *philo, t_var *var);
+
+	//leaks
+void		ft_leaks(void);
 
 #endif
 
@@ -98,9 +102,11 @@ void		*life_tracker(void *arg);
 
 //Check 2 philosophers.
 
-//Organizar los filósofos en la primera vuelta en pares e impares.
-//Comprobar varios casos con 2 filósofos y arreglar el problema con 1 filósofo.
-//Destruír los fork_mutex dentro de un bucle while.
-//Aumentar el tiempo en de 2 a 5ms para imprimir la muerte con usleep.
-//Ver si es necesario implementar una nueva función para gestionar el incremento
-//de la función usleep.
+//Arreglar prueba con 1 filósofo													OK
+//Organizar los filósofos en la primera vuelta en pares e impares.					OK
+//Comprobar varios casos con 2 filósofos y arreglar el problema con 1 filósofo.		-
+//Destruír los fork_mtx dentro de un bucle while.									OK
+//Aumentar el tiempo a 1ms para imprimir la muerte con usleep.						En espera
+//Implementar una nueva función para gestionar el incremento de usleep.				
+//Comprobar leaks de memoria.														OK
+//Reestructurar código.																OK
