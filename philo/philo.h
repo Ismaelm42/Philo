@@ -47,6 +47,8 @@ typedef struct t_philo
 {
 	int					n_philo;
 	int					n_fork;
+	int					unlock_left;
+	int					unlock_right;
 	long				time_sec;
 	long				time_usec;
 	long				time_mark;
@@ -71,10 +73,10 @@ void		thinking(t_philo *philo);
 void		*thread_routine(void *arg);
 
 //philo_utils
-void		*life_tracker(void *arg);
+void		*tracker_routine(void *arg);
 void		timestamp(t_philo *philo, char *message);
 long		get_time(t_philo *philo);
-void		sleep_for(t_philo *philo, long milliseconds);
+
 
 //philo_parse_utils
 int			error(char *str);
@@ -92,22 +94,23 @@ void		ft_leaks(void);
 //Pruebas:
 
 //1 800 200 200 -> Not eat and die.
-
 //5 800 200 200 -> No philosopher shoud die.
-
 //5 800 200 200 7 -> No philosopher shoud die and simulation stops at 7 meals.
-
 //4 410 200 200 -> No philosopher should die.
-
 //4 310 200 100 -> One philosopher should die.
 
-//Check 2 philosophers.
 
-//Arreglar prueba con 1 filósofo													OK
-//Organizar los filósofos en la primera vuelta en pares e impares.					OK
-//Comprobar varios casos con 2 filósofos y arreglar el problema con 1 filósofo.		-
-//Destruír los fork_mtx dentro de un bucle while.									OK
-//Aumentar el tiempo a 1ms para imprimir la muerte con usleep.						En espera
-//Implementar una nueva función para gestionar el incremento de usleep.				
-//Comprobar leaks de memoria.														OK
-//Reestructurar código.																OK
+/*
+
+Test: 
+
+4 200 205 200 -> Se queda pillado
+
+
+5 800 200 200
+5 600 150 150
+4 410 200 200
+100 800 200 200
+105 800 200 200
+200 800 200 200
+*/

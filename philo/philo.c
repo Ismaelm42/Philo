@@ -59,6 +59,8 @@ t_philo	*struct_init_philo(t_var *var)
 		philo[i].life_time = &life_time[i];
 		philo[i].eat_counter = 0;
 		philo[i].var = var;
+		philo[i].unlock_left = 0;
+		philo[i].unlock_right = 0;
 		i++;
 	}
 	return (philo);
@@ -68,12 +70,12 @@ t_philo	*struct_init_philo(t_var *var)
 
 int	thread_init(t_philo *philo)
 {
-	pthread_t	tracker;
-	int			i;
+	pthread_t			tracker;
+	int					i;
 
-	pthread_mutex_init(philo->var->write_mtx, NULL);
-	pthread_create(&tracker, NULL, &life_tracker, philo);
 	gettimeofday(&philo->var->time.t_start, NULL);
+	pthread_mutex_init(philo->var->write_mtx, NULL);
+	pthread_create(&tracker, NULL, &tracker_routine, philo);
 	i = 0;
 	while (i < philo->var->n_philos)
 	{
