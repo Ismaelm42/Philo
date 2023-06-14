@@ -40,6 +40,7 @@ typedef struct s_var
 	int					flag;
 	t_time				time;
 	pthread_mutex_t		*write_mtx;
+	pthread_mutex_t		*eat_mtx;
 	pthread_mutex_t		*fork_mtx;
 }						t_var;
 
@@ -66,7 +67,6 @@ int			thread_join(t_philo *philo, pthread_t tracker);
 int			main(int argc, char **argv);
 
 //philo_status
-void		taking_forks(t_philo *philo);
 void		eating(t_philo *philo);
 void		sleeping(t_philo *philo);
 void		thinking(t_philo *philo);
@@ -76,6 +76,7 @@ void		*thread_routine(void *arg);
 void		*tracker_routine(void *arg);
 void		timestamp(t_philo *philo, char *message);
 long		get_time(t_philo *philo);
+void		sleep_ms(t_philo *philo, long milliseconds);
 
 
 //philo_parse_utils
@@ -99,18 +100,22 @@ void		ft_leaks(void);
 //4 410 200 200 -> No philosopher should die.
 //4 310 200 100 -> One philosopher should die.
 
-
 /*
 
 Test: 
 
-4 200 205 200 -> Se queda pillado
+./philo 5 800 200 200	-> no debe morir			OK
+./philo 5 800 200 200 7	-> no debe morir			OK
+./philo 4 410 200 200	-> no debe morir			OK ?
+./philo 3 310 100 100	-> no debe morir			OK ?
+./philo 5 800 200 200	-> no debe morir			OK
+./philo 5 600 150 150	-> no debe morir			OK ?
 
+./philo 1 800 200 200	-> debe morir				OK
+./philo 4 200 205 200	-> debe morir				OK
+./philo 100 800 200 200	-> debe morir				OK
+./philo 105 800 200 200	-> debe morir				OK
+./philo 200 800 200 200	-> debe morir				OK
+./philo 4 310 200 100	-> debe morir				OK
 
-5 800 200 200
-5 600 150 150
-4 410 200 200
-100 800 200 200
-105 800 200 200
-200 800 200 200
 */

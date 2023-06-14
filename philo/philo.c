@@ -19,6 +19,7 @@ t_var	*struct_init_var(int argc, char **argv)
 
 	var = (t_var *) malloc(sizeof(t_var));
 	var->write_mtx = (pthread_mutex_t *) malloc(sizeof(pthread_mutex_t));
+	var->eat_mtx = (pthread_mutex_t *) malloc(sizeof(pthread_mutex_t));
 	var->flag = 1;
 	var->n_philos = long_atoi(argv[1], &var->flag);
 	if (var->n_philos > 200)
@@ -74,6 +75,7 @@ int	thread_init(t_philo *philo)
 	int					i;
 
 	gettimeofday(&philo->var->time.t_start, NULL);
+	pthread_mutex_init(philo->var->eat_mtx, NULL);
 	pthread_mutex_init(philo->var->write_mtx, NULL);
 	pthread_create(&tracker, NULL, &tracker_routine, philo);
 	i = 0;
@@ -106,6 +108,7 @@ int	thread_join(t_philo *philo, pthread_t tracker)
 		pthread_mutex_destroy(&philo->var->fork_mtx[i]);
 		i++;
 	}
+	pthread_mutex_destroy(philo->var->eat_mtx);
 	pthread_mutex_destroy(philo->var->write_mtx);
 	return (EXIT_SUCCESS);
 }

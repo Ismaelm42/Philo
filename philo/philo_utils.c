@@ -37,7 +37,7 @@ void	*tracker_routine(void *arg)
 	if (i == philo->var->n_philos)
 		i = 1;
 	if (tracker >= philo->var->t_death)
-		timestamp(&philo[i - 1], "died");
+		timestamp(&philo[i - 1], "\x1b[31mdied\x1b[0m");
 	return (NULL);
 }
 
@@ -70,4 +70,24 @@ long	get_time(t_philo *philo)
 		+ (philo->life_time->t_end.tv_usec - \
 		philo->life_time->t_start.tv_usec) / 1000;
 	return (time);
+}
+
+void	sleep_ms(t_philo *philo, long milliseconds)
+{
+	struct timeval	t_start;
+	struct timeval	t_end;
+	long			time;
+
+	time = 0;
+	gettimeofday(&t_start, NULL);
+	while (time < milliseconds)
+	{
+		usleep(1);
+		gettimeofday(&t_end, NULL);
+		time = (t_end.tv_sec - t_start.tv_sec) * 1000 \
+			+ (t_end.tv_usec - t_start.tv_usec) / 1000;
+	}
+	pthread_mutex_lock(philo->var->write_mtx);
+	printf("time = %ld\n", time);
+	pthread_mutex_unlock(philo->var->write_mtx);
 }
