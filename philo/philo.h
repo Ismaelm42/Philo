@@ -106,10 +106,11 @@ Test:
 
 ./philo 5 800 200 200	-> no debe morir			OK
 ./philo 5 800 200 200 7	-> no debe morir			OK
-./philo 4 410 200 200	-> no debe morir			OK ?
-./philo 3 310 100 100	-> no debe morir			OK ?
+./philo 4 410 200 200	-> no debe morir			OK
+./philo 3 310 100 100	-> no debe morir			OK
 ./philo 5 800 200 200	-> no debe morir			OK
-./philo 5 600 150 150	-> no debe morir			OK ?
+./philo 5 600 150 150	-> no debe morir			OK
+./philo 2 210 100 100	-> no debe morir			OK
 
 ./philo 1 800 200 200	-> debe morir				OK
 ./philo 4 200 205 200	-> debe morir				OK

@@ -17,7 +17,7 @@ void	eating(t_philo *philo)
 	int	next_philo;
 
 	if (philo->var->n_philos == 1)
-		usleep((philo->var->t_death + 100) * 1000);
+		usleep((philo->var->t_death + 1) * 1000);
 	else
 	{
 		next_philo = philo->n_philo;
@@ -26,9 +26,9 @@ void	eating(t_philo *philo)
 
 		pthread_mutex_lock(philo->var->eat_mtx);
 		pthread_mutex_lock(&philo->var->fork_mtx[philo->n_philo - 1]);
+		pthread_mutex_unlock(philo->var->eat_mtx);
 		if (philo->var->flag != 0)
 			timestamp(philo, "has taken a fork");
-		pthread_mutex_unlock(philo->var->eat_mtx);
 		pthread_mutex_lock(&philo->var->fork_mtx[next_philo]);
 		if (philo->var->flag != 0)
 		{
