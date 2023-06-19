@@ -43,28 +43,22 @@ long	long_atoi(char *str, int *flag)
 	}
 	return (sum);
 }
-//Si lo mantengo hasta el valor max de un int da segmentation fault.
 
 void	deallocate(t_philo *philo, t_var *var)
 {
 	if (philo == NULL)
 	{
-		free(var->write_mtx);
-		free(var->fork_mtx);
+		free(var->fork_mutex);
 		free(var);
 	}
 	else
 	{
-		free(philo->var->write_mtx);
-		free(philo->var->fork_mtx);
+		free(philo->var->fork_mutex);
 		free(philo->life_time);
 		free(philo->var);
 		free(philo);
 	}
 }
-
-//El if añade la condición cuando life_time no ha sido aún inicializado 
-//y se toma el tiempo del comienzo del programa como referencia.
 
 void	ft_leaks(void)
 {

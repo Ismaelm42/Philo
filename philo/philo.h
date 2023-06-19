@@ -38,25 +38,24 @@ typedef struct s_var
 	long				t_sleep;
 	long				n_eat;
 	int					flag;
+	int					eat_counter;
 	t_time				time;
-	pthread_mutex_t		*write_mtx;
-	pthread_mutex_t		*eat_mtx;
-	pthread_mutex_t		*fork_mtx;
+	pthread_mutex_t		var_mutex;
+	pthread_mutex_t		write_mutex;
+	pthread_mutex_t		*fork_mutex;
 }						t_var;
 
 typedef struct t_philo
 {
 	int					n_philo;
-	int					n_fork;
-	int					unlock_left;
-	int					unlock_right;
-	long				time_sec;
-	long				time_usec;
-	long				time_mark;
-	long				eat_counter;
+	int					next_philo;
+	long				delay;
+	long				eat_marker;
+	long				time_marker;
+	struct timeval		delay_marker;
 	t_time				*life_time;
-	pthread_t			thread;
 	t_var				*var;
+	pthread_t			thread;
 }						t_philo;
 
 //philo
@@ -64,10 +63,10 @@ t_var		*struct_init_var(int argc, char **argv);
 t_philo		*struct_init_philo(t_var *var);
 int			thread_init(t_philo *philo);
 int			thread_join(t_philo *philo, pthread_t tracker);
-int			main(int argc, char **argv);
 
 //philo_status
-void		eating(t_philo *philo);
+void		taking_forks(t_philo *philo);
+int			eating(t_philo *philo);
 void		sleeping(t_philo *philo);
 void		thinking(t_philo *philo);
 void		*thread_routine(void *arg);
@@ -75,8 +74,9 @@ void		*thread_routine(void *arg);
 //philo_utils
 void		*tracker_routine(void *arg);
 void		timestamp(t_philo *philo, char *message);
-long		get_time(t_philo *philo);
-void		sleep_ms(t_philo *philo, long milliseconds);
+long		get_time(t_philo *philo, struct timeval start, struct timeval end);
+void		sleeper(t_philo *philo, long timer);
+void		add_delay(t_philo *philo);
 
 
 //philo_parse_utils
@@ -102,21 +102,34 @@ void		ft_leaks(void);
 
 /*
 
-Test: 
+Test: Con usleep(500) y sin thinking time.
 
-./philo 5 800 200 200	-> no debe morir			OK
-./philo 5 800 200 200 7	-> no debe morir			OK
-./philo 4 410 200 200	-> no debe morir			OK
-./philo 3 310 100 100	-> no debe morir			OK
-./philo 5 800 200 200	-> no debe morir			OK
-./philo 5 600 150 150	-> no debe morir			OK
-./philo 2 210 100 100	-> no debe morir			OK
+./philo 5 800 200 200		-> no debe morir	-		OK			5/5	
+./philo 4 410 200 200		-> no debe morir			OK			5/5	
+./philo 3 310 100 100		-> no debe morir			OK			5/5		
+./philo 5 600 150 150		-> no debe morir			OK			5/5		
+./philo 2 210 100 100		-> no debe morir	-		OK			5/5
+./philo 2 200 60 60 1
 
-./philo 1 800 200 200	-> debe morir				OK
-./philo 4 200 205 200	-> debe morir				OK
-./philo 100 800 200 200	-> debe morir				OK
-./philo 105 800 200 200	-> debe morir				OK
-./philo 200 800 200 200	-> debe morir				OK
-./philo 4 310 200 100	-> debe morir				OK
+./philo 100 4000 60 60		-> no debe morir			OK			5/5	
+./philo 150 4000 60 60		-> no debe morir			OK			5/5
+./philo 200 4000 60 60		-> no debe morir			OK			5/5
+./philo 200 4000 120 60		-> no debe morir	-		OK			5/5
+./philo 200 4000 500 500	-> no debe morir			OK
+
+./philo 2 200 60 60 0 		-> debe morir
+./philo 1 800 200 200		-> debe morir				OK			5/5
+./philo 4 200 205 200		-> debe morir				OK			5/5
+./philo 100 800 200 200		-> debe morir		-		OK			5/5
+./philo 105 800 200 200		-> debe morir		-		OK			5/5
+./philo 200 800 200 200		-> debe morir		-		OK			5/5
+./philo 4 310 200 100		-> debe morir				OK			5/5
+./philo 200 2000 200 200	-> debe morir		-		OK			5/5
 
 */
+
+//Implementar función del tiempo
+//Arreglar parseo -> mallocs no protegidos
+//Ver si algunos mutex etc... se pueden hacer sin reservar memoria y pasandole la dirección de memoria simplemente
+//Quizás convenga tener taking forks y eating en una misma función.
+//Es posible que el problema venga del cálculo del tiempo?

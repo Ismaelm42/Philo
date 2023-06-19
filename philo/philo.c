@@ -18,9 +18,8 @@ t_var	*struct_init_var(int argc, char **argv)
 	t_var	*var;
 
 	var = (t_var *) malloc(sizeof(t_var));
-	var->write_mtx = (pthread_mutex_t *) malloc(sizeof(pthread_mutex_t));
-	var->eat_mtx = (pthread_mutex_t *) malloc(sizeof(pthread_mutex_t));
 	var->flag = 1;
+	var->eat_counter = 0;
 	var->n_philos = long_atoi(argv[1], &var->flag);
 	if (var->n_philos > 200)
 		var->n_philos = 200;
@@ -30,19 +29,16 @@ t_var	*struct_init_var(int argc, char **argv)
 	var->n_eat = -1;
 	if (argc > 5)
 		var->n_eat = long_atoi(argv[5], &var->flag);
-	var->fork_mtx = (pthread_mutex_t *) \
+	var->fork_mutex = (pthread_mutex_t *) \
 		malloc(sizeof(pthread_mutex_t) * var->n_philos);
 	i = 0;
 	while (i < var->n_philos)
 	{
-		pthread_mutex_init(&var->fork_mtx[i], NULL);
+		pthread_mutex_init(&var->fork_mutex[i], NULL);
 		i++;
 	}
 	return (var);
 }
-
-//Al cerrar el programa hay que hacer while con
-//pthread_mtx_destroy para eliminarlos.
 
 t_philo	*struct_init_philo(t_var *var)
 {
@@ -51,33 +47,32 @@ t_philo	*struct_init_philo(t_var *var)
 	t_time	*life_time;
 
 	philo = (t_philo *) malloc(sizeof(t_philo) * var->n_philos);
+	if (philo == NULL)
+		return (NULL);
 	life_time = (t_time *) malloc(sizeof(t_philo) * var->n_philos);
+	if (life_time == NULL)
+		return (NULL);
 	i = 0;
 	while (i < var->n_philos)
 	{
 		philo[i].n_philo = i + 1;
-		philo[i].n_fork = i + 1;
 		philo[i].life_time = &life_time[i];
-		philo[i].eat_counter = 0;
+		philo[i].eat_marker = 0;
 		philo[i].var = var;
-		philo[i].unlock_left = 0;
-		philo[i].unlock_right = 0;
 		i++;
 	}
 	return (philo);
 }
-
-//times_philos_eat devuelve -1 cuando no se ha introducido ningún valor.
 
 int	thread_init(t_philo *philo)
 {
 	pthread_t			tracker;
 	int					i;
 
-	gettimeofday(&philo->var->time.t_start, NULL);
-	pthread_mutex_init(philo->var->eat_mtx, NULL);
-	pthread_mutex_init(philo->var->write_mtx, NULL);
+	pthread_mutex_init(&philo->var->var_mutex, NULL);
+	pthread_mutex_init(&philo->var->write_mutex, NULL);
 	pthread_create(&tracker, NULL, &tracker_routine, philo);
+	gettimeofday(&philo->var->time.t_start, NULL);
 	i = 0;
 	while (i < philo->var->n_philos)
 	{
@@ -105,14 +100,13 @@ int	thread_join(t_philo *philo, pthread_t tracker)
 	i = 0;
 	while (i < philo->var->n_philos)
 	{
-		pthread_mutex_destroy(&philo->var->fork_mtx[i]);
+		pthread_mutex_destroy(&philo->var->fork_mutex[i]);
 		i++;
 	}
-	pthread_mutex_destroy(philo->var->eat_mtx);
-	pthread_mutex_destroy(philo->var->write_mtx);
+	pthread_mutex_destroy(&philo->var->var_mutex);
+	pthread_mutex_destroy(&philo->var->write_mutex);
 	return (EXIT_SUCCESS);
 }
-//pthread_join(tracker...) debe estar al final, si no da resultados raros.
 
 int	main(int argc, char **argv)
 {
