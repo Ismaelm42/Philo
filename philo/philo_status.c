@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:43:40 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/08 19:20:08 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/20 13:18:00 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ int	eating(t_philo *philo)
 	pthread_mutex_unlock(&philo->var->fork_mutex[philo->next_philo]);
 	if (philo->eat_marker == philo->var->n_eat)
 	{
-		pthread_mutex_lock(&philo->var->var_mutex);
+		pthread_mutex_lock(&philo->var->mutex);
 		philo->var->eat_counter++;
-		pthread_mutex_unlock(&philo->var->var_mutex);
+		pthread_mutex_unlock(&philo->var->mutex);
 		return (1);
 	}
 	return (0);
@@ -86,8 +86,3 @@ void	*thread_routine(void *arg)
 	}
 	return (NULL);
 }
-//Tener en cuenta valores negativos para sleeper etc.
-//Función en Thinking con wait-time parece obligatoria
-//para que esperen los que ya han comido.
-
-//LO TIENES CASI MI BRO!!!!

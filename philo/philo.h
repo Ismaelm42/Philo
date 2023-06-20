@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 10:35:49 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/08 19:17:06 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/20 13:17:20 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,7 @@ typedef struct s_var
 	int					flag;
 	int					eat_counter;
 	t_time				time;
-	pthread_mutex_t		var_mutex;
-	pthread_mutex_t		write_mutex;
+	pthread_mutex_t		mutex;
 	pthread_mutex_t		*fork_mutex;
 }						t_var;
 
@@ -78,7 +77,6 @@ long		get_time(t_philo *philo, struct timeval start, struct timeval end);
 void		sleeper(t_philo *philo, long timer);
 void		add_delay(t_philo *philo);
 
-
 //philo_parse_utils
 int			error(char *str);
 long		long_atoi(char *str, int *flag);
@@ -102,34 +100,39 @@ void		ft_leaks(void);
 
 /*
 
-Test: Con usleep(500) y sin thinking time.
+Test: Con usleep(500) y sin thinking time.							HOME				42
 
-./philo 5 800 200 200		-> no debe morir	-		OK			5/5	
-./philo 4 410 200 200		-> no debe morir			OK			5/5	
-./philo 3 310 100 100		-> no debe morir			OK			5/5		
-./philo 5 600 150 150		-> no debe morir			OK			5/5		
-./philo 2 210 100 100		-> no debe morir	-		OK			5/5
+./philo 5 800 200 200		-> no debe morir	-		OK			5/5					5/5
+./philo 4 410 200 200		-> no debe morir			OK			5/5					4/5 ->Problema con la función tracker que se ha crasheado y da una muerte en 205. (No estaba el usleep de 10)
+./philo 3 310 100 100		-> no debe morir			OK			5/5					5/5	
+./philo 3 301 100 100		-> no debe morir
+./philo 5 600 150 150		-> no debe morir			OK			5/5					5/5
+./philo 2 210 100 100		-> no debe morir	-		OK			5/5					5/5
 ./philo 2 200 60 60 1
 
-./philo 100 4000 60 60		-> no debe morir			OK			5/5	
-./philo 150 4000 60 60		-> no debe morir			OK			5/5
-./philo 200 4000 60 60		-> no debe morir			OK			5/5
-./philo 200 4000 120 60		-> no debe morir	-		OK			5/5
-./philo 200 4000 500 500	-> no debe morir			OK
+./philo 100 4000 60 60		-> no debe morir			OK			5/5					10/10
+./philo 150 4000 60 60		-> no debe morir			OK			5/5					10/10
+./philo 200 4000 60 60		-> no debe morir			OK			5/5					10/10
+./philo 200 4000 120 60		-> no debe morir	-		OK			5/5					10/10
+./philo 200 4000 500 500	-> no debe morir			OK			5/5					10/10
 
-./philo 2 200 60 60 0 		-> debe morir
-./philo 1 800 200 200		-> debe morir				OK			5/5
-./philo 4 200 205 200		-> debe morir				OK			5/5
-./philo 100 800 200 200		-> debe morir		-		OK			5/5
-./philo 105 800 200 200		-> debe morir		-		OK			5/5
-./philo 200 800 200 200		-> debe morir		-		OK			5/5
+./philo 3 300 100 10		-> debe morir
+./philo 2 200 60 60 0 		-> debe morir												
+./philo 1 800 200 200		-> debe morir				OK			5/5					
+./philo 4 200 205 200		-> debe morir				OK			5/5					
+./philo 100 800 200 200		-> debe morir		-		OK			5/5					10/10 ->Tardan en morir pero mueren. Alrededor de 12 segundos o más.
+./philo 105 800 200 200		-> debe morir		-		OK			5/5					10/10 ->Tardan bastante en morir también. Se van casi a los 15 segundos o más a veces.
+./philo 200 800 200 200		-> debe morir		-		OK			5/5					
 ./philo 4 310 200 100		-> debe morir				OK			5/5
-./philo 200 2000 200 200	-> debe morir		-		OK			5/5
+
+
+./philo 200 1500 200 200 -> A veces mueren y otras veces no.
+
+
 
 */
 
 //Implementar función del tiempo
 //Arreglar parseo -> mallocs no protegidos
 //Ver si algunos mutex etc... se pueden hacer sin reservar memoria y pasandole la dirección de memoria simplemente
-//Quizás convenga tener taking forks y eating en una misma función.
 //Es posible que el problema venga del cálculo del tiempo?

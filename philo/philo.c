@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 11:12:13 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/08 14:15:27 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/20 16:32:50 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,7 @@ int	thread_init(t_philo *philo)
 	pthread_t			tracker;
 	int					i;
 
-	pthread_mutex_init(&philo->var->var_mutex, NULL);
-	pthread_mutex_init(&philo->var->write_mutex, NULL);
+	pthread_mutex_init(&philo->var->mutex, NULL);
 	pthread_create(&tracker, NULL, &tracker_routine, philo);
 	gettimeofday(&philo->var->time.t_start, NULL);
 	i = 0;
@@ -103,8 +102,7 @@ int	thread_join(t_philo *philo, pthread_t tracker)
 		pthread_mutex_destroy(&philo->var->fork_mutex[i]);
 		i++;
 	}
-	pthread_mutex_destroy(&philo->var->var_mutex);
-	pthread_mutex_destroy(&philo->var->write_mutex);
+	pthread_mutex_destroy(&philo->var->mutex);
 	return (EXIT_SUCCESS);
 }
 

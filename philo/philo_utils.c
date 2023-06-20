@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 13:10:34 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/08 19:17:11 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/20 16:34:43 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	*tracker_routine(void *arg)
 			i = 0;
 		if (philo->var->eat_counter == philo->var->n_philos)
 			break ;
-		//usleep(10);
+		usleep(1);
 		gettimeofday(&philo[i].life_time->t_end, NULL);
 		tracker = get_time(philo, philo[i].life_time->t_start, \
 		philo[i].life_time->t_end);
@@ -61,12 +61,12 @@ void	sleeper(t_philo *philo, long timer)
 
 void	timestamp(t_philo *philo, char *message)
 {
-	pthread_mutex_lock(&philo->var->write_mutex);
+	pthread_mutex_lock(&philo->var->mutex);
 	gettimeofday(&philo->var->time.t_end, NULL);
 	philo->time_marker = get_time(philo, philo->var->time.t_start, \
 	philo->var->time.t_end);
 	printf("%ld ms %d %s\n", philo->time_marker, philo->n_philo, message);
-	pthread_mutex_unlock(&philo->var->write_mutex);
+	pthread_mutex_unlock(&philo->var->mutex);
 }
 
 long	get_time(t_philo *philo, struct timeval start, struct timeval end)
@@ -85,8 +85,6 @@ long	get_time(t_philo *philo, struct timeval start, struct timeval end)
 	time = end_time - start_time;
 	return (time);
 }
-//He quitado un eat_mutex de get_time por si genera errores, volver a colocarlo.
-//No debería generar una mierda.
 
 void	add_delay(t_philo *philo)
 {
@@ -96,7 +94,7 @@ void	add_delay(t_philo *philo)
 	philo->delay_marker);
 	if (philo->delay < 0)
 		philo->delay = 0;
-	if (philo->var->n_philos <= 50)
+	if (philo->var->n_philos < 100)
 		sleeper(philo, philo->delay / 2);
 	else
 		sleeper(philo, philo->delay / 4);
