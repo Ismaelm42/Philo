@@ -70,6 +70,9 @@ int	thread_init(t_philo *philo)
 	int					i;
 
 	pthread_mutex_init(&philo->var->mutex, NULL);
+	pthread_mutex_init(&philo->var->counter_mutex, NULL);
+	pthread_mutex_init(&philo->var->flag_mutex, NULL);
+	pthread_mutex_init(&philo->var->life_time_mutex, NULL);
 	pthread_create(&tracker, NULL, &tracker_routine, philo);
 	gettimeofday(&philo->var->time.t_start, NULL);
 	i = 0;
@@ -103,6 +106,9 @@ int	thread_join(t_philo *philo, pthread_t tracker)
 		i++;
 	}
 	pthread_mutex_destroy(&philo->var->mutex);
+	pthread_mutex_destroy(&philo->var->counter_mutex);
+	pthread_mutex_destroy(&philo->var->flag_mutex);
+	pthread_mutex_destroy(&philo->var->life_time_mutex);
 	return (EXIT_SUCCESS);
 }
 

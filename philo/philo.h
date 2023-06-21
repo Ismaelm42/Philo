@@ -41,6 +41,9 @@ typedef struct s_var
 	int					eat_counter;
 	t_time				time;
 	pthread_mutex_t		mutex;
+	pthread_mutex_t		flag_mutex;
+	pthread_mutex_t		counter_mutex;
+	pthread_mutex_t		life_time_mutex;
 	pthread_mutex_t		*fork_mutex;
 }						t_var;
 
@@ -64,7 +67,7 @@ int			thread_init(t_philo *philo);
 int			thread_join(t_philo *philo, pthread_t tracker);
 
 //philo_status
-void		taking_forks(t_philo *philo);
+int			taking_forks(t_philo *philo);
 int			eating(t_philo *philo);
 void		sleeping(t_philo *philo);
 void		thinking(t_philo *philo);
@@ -99,7 +102,6 @@ void		ft_leaks(void);
 //4 310 200 100 -> One philosopher should die.
 
 /*
-
 Test: Con usleep(500) y sin thinking time.							HOME				42
 
 ./philo 5 800 200 200		-> no debe morir	-		OK			5/5					5/5
@@ -125,14 +127,12 @@ Test: Con usleep(500) y sin thinking time.							HOME				42
 ./philo 200 800 200 200		-> debe morir		-		OK			5/5					
 ./philo 4 310 200 100		-> debe morir				OK			5/5
 
-
 ./philo 200 1500 200 200 -> A veces mueren y otras veces no.
-
-
-
 */
 
 //Implementar función del tiempo
 //Arreglar parseo -> mallocs no protegidos
-//Ver si algunos mutex etc... se pueden hacer sin reservar memoria y pasandole la dirección de memoria simplemente
+//Ver si algunos mutex etc... se pueden hacer sin reservar memoria
+//y pasandole la dirección de memoria simplemente
 //Es posible que el problema venga del cálculo del tiempo?
+//Corregir los Data racists

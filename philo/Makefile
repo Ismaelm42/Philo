@@ -21,7 +21,7 @@ OBJT = $(SRC:.c=.o)
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -pthread -fsanitize=thread -g
 
 RM = rm -f
 
