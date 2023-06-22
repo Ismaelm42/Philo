@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 11:12:13 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/20 16:32:50 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/22 12:28:25 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int	main(int argc, char **argv)
 	t_var	*var;
 	t_philo	*philo;
 
-	atexit(ft_leaks);
+	//atexit(ft_leaks);
 	if (argc < 5)
 		return (error(ARG_ERRN));
 	var = struct_init_var(argc, argv);

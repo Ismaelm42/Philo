@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 10:35:49 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/20 13:17:20 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/22 15:21:47 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void		*tracker_routine(void *arg);
 void		timestamp(t_philo *philo, char *message);
 long		get_time(t_philo *philo, struct timeval start, struct timeval end);
 void		sleeper(t_philo *philo, long timer);
-void		add_delay(t_philo *philo);
+void		add_delay(t_philo *philo, int loop);
 
 //philo_parse_utils
 int			error(char *str);
@@ -122,12 +122,15 @@ Test: Con usleep(500) y sin thinking time.							HOME				42
 ./philo 2 200 60 60 0 		-> debe morir												
 ./philo 1 800 200 200		-> debe morir				OK			5/5					
 ./philo 4 200 205 200		-> debe morir				OK			5/5					
-./philo 100 800 200 200		-> debe morir		-		OK			5/5					10/10 ->Tardan en morir pero mueren. Alrededor de 12 segundos o más.
-./philo 105 800 200 200		-> debe morir		-		OK			5/5					10/10 ->Tardan bastante en morir también. Se van casi a los 15 segundos o más a veces.
+
+./philo 100 800 300 200		-> debe morir
 ./philo 200 800 200 200		-> debe morir		-		OK			5/5					
 ./philo 4 310 200 100		-> debe morir				OK			5/5
 
-./philo 200 1500 200 200 -> A veces mueren y otras veces no.
+./philo 100 800 100 100		-> no debe morir		-		OK			5/5		Prueba de mierda, hace cosas raras -> No mueren? / Mueren pero tardísimo hasta 108 segundos aguantan a veces.
+./philo 100 800 150 150		-> no debe morir									Prueba de mierda, hace cosas raras
+./philo 200 1500 200 200 	-> no debe morir.									Prueba de mierda, hace cosas raras
+
 */
 
 //Implementar función del tiempo

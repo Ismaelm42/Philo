@@ -6,7 +6,7 @@
 #    By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/26 10:35:40 by imoro-sa          #+#    #+#              #
-#    Updated: 2023/06/08 13:13:45 by imoro-sa         ###   ########.fr        #
+#    Updated: 2023/06/22 13:18:03 by imoro-sa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ OBJT = $(SRC:.c=.o)
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror -pthread -fsanitize=thread -g
+CFLAGS = -Wall -Wextra -Werror# -pthread -fsanitize=thread -g
 
 RM = rm -f
 

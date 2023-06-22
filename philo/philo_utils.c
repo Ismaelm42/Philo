@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 13:10:34 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/20 16:34:43 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/22 15:59:21 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,14 +99,15 @@ long	get_time(t_philo *philo, struct timeval start, struct timeval end)
 	return (time);
 }
 
-void	add_delay(t_philo *philo)
+void	add_delay(t_philo *philo, int loop)
 {
 	//mutex
 	pthread_mutex_lock(&philo->var->mutex);
 	gettimeofday(&philo->delay_marker, NULL);
-	philo->delay = philo->var->t_death - \
-	get_time(philo, philo->var->time.t_start, \
-	philo->delay_marker);
+	philo->delay = philo->var->t_death - get_time(philo, philo->var->time.t_start, philo->delay_marker);
+	//Error aquí, corregir con el tiempo cuando entra en eating para renovar ese tiempo.
+	//Cambiar la función para que recoja el tiempo no acumulativo, sino el de cada comida y en caso de que sea igual a 0 que coja el de var.
+	//var->time.t_start debe ser igual a philo->life_time.t_start, si la última comida no existe, el tiempo debe ser entonces igual a var->time.t_start
 	if (philo->delay < 0)
 		philo->delay = 0;
 	else if (philo->var->n_philos < 100)

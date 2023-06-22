@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:43:40 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/20 13:18:00 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/22 15:19:03 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	thinking(t_philo *philo)
 	{
 		pthread_mutex_unlock(&philo->var->flag_mutex);
 		timestamp(philo, "is thinking");
-		add_delay(philo);
+		add_delay(philo, 1);
 	}
 	else
 		pthread_mutex_unlock(&philo->var->flag_mutex);
@@ -103,8 +103,8 @@ void	*thread_routine(void *arg)
 	philo->next_philo = philo->n_philo;
 	if (philo->n_philo == philo->var->n_philos)
 		philo->next_philo = 0;
-	if (philo->n_philo % 2 == 0)
-		add_delay(philo);
+	if (philo->n_philo % 2 != 0)
+		add_delay(philo, 0);
 	while (1)
 	{
 		pthread_mutex_lock(&philo->var->flag_mutex);
