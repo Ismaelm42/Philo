@@ -13,6 +13,7 @@
 NAME = philo
 
 SRC =	philo.c				\
+		philo_routine.c		\
 		philo_status.c		\
 		philo_utils.c		\
 		philo_parse_utils.c	\

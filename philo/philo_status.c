@@ -14,14 +14,11 @@
 
 int	taking_forks(t_philo *philo)
 {
-	if (philo->var->n_philos == 1 || philo->var->n_eat == 0)
-	{
-		usleep((philo->var->t_death + 1) * 1000);
-		return (1);
-	}
+	if (philo->var->nbr_philos == 1 || philo->var->nbr_eat == 0)
+		return (sleeper(philo, (philo->var->time_to_death + 1)), 1);
 	else
 	{
-		pthread_mutex_lock(&philo->var->fork_mutex[philo->n_philo - 1]);
+		pthread_mutex_lock(&philo->var->fork_mutex[philo->philo - 1]);
 		pthread_mutex_lock(&philo->var->flag_mutex);
 		if (philo->var->flag != 0)
 		{
@@ -42,7 +39,6 @@ int	taking_forks(t_philo *philo)
 	}
 	return (0);
 }
-//sync que puede ser un posible problema. No debería ser muy grave.
 
 int	eating(t_philo *philo)
 {
@@ -50,16 +46,16 @@ int	eating(t_philo *philo)
 	if (philo->var->flag != 0)
 	{
 		pthread_mutex_unlock(&philo->var->flag_mutex);
-		gettimeofday(&philo->life_time->t_start, NULL);
+		gettimeofday(&philo->life_cycle->t_start, NULL);
 		timestamp(philo, "is eating");
-		sleeper(philo, philo->var->t_eat);
+		sleeper(philo, philo->var->time_to_eat);
 		philo->eat_marker++;
 	}
 	else
 		pthread_mutex_unlock(&philo->var->flag_mutex);
-	pthread_mutex_unlock(&philo->var->fork_mutex[philo->n_philo - 1]);
+	pthread_mutex_unlock(&philo->var->fork_mutex[philo->philo - 1]);
 	pthread_mutex_unlock(&philo->var->fork_mutex[philo->next_philo]);
-	if (philo->eat_marker == philo->var->n_eat)
+	if (philo->eat_marker == philo->var->nbr_eat)
 	{
 		pthread_mutex_lock(&philo->var->counter_mutex);
 		philo->var->eat_counter++;
@@ -76,7 +72,7 @@ void	sleeping(t_philo *philo)
 	{
 		pthread_mutex_unlock(&philo->var->flag_mutex);
 		timestamp(philo, "is sleeping");
-		sleeper(philo, philo->var->t_sleep);
+		sleeper(philo, philo->var->time_to_sleep);
 	}
 	else
 		pthread_mutex_unlock(&philo->var->flag_mutex);
@@ -89,38 +85,9 @@ void	thinking(t_philo *philo)
 	{
 		pthread_mutex_unlock(&philo->var->flag_mutex);
 		timestamp(philo, "is thinking");
-		add_delay(philo, 1);
+		add_delay(philo, philo->life_cycle->t_start);
 	}
 	else
 		pthread_mutex_unlock(&philo->var->flag_mutex);
 }
 
-void	*thread_routine(void *arg)
-{
-	t_philo	*philo;
-
-	philo = (t_philo *)arg;
-	philo->next_philo = philo->n_philo;
-	if (philo->n_philo == philo->var->n_philos)
-		philo->next_philo = 0;
-	if (philo->n_philo % 2 != 0)
-		add_delay(philo, 0);
-	while (1)
-	{
-		pthread_mutex_lock(&philo->var->flag_mutex);
-		if (philo->var->flag == 0)
-		{
-			pthread_mutex_unlock(&philo->var->flag_mutex);
-			break ;
-		}
-		else
-			pthread_mutex_unlock(&philo->var->flag_mutex);
-		if (taking_forks(philo) == 1)
-			break ;
-		if (eating(philo) == 1)
-			break ;
-		sleeping(philo);
-		thinking(philo);
-	}
-	return (NULL);
-}

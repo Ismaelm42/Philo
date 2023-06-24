@@ -54,11 +54,32 @@ void	deallocate(t_philo *philo, t_var *var)
 	else
 	{
 		free(philo->var->fork_mutex);
-		free(philo->life_time);
+		free(philo->life_cycle);
 		free(philo->var);
 		free(philo);
 	}
 }
+
+t_var	*fork_mutex_allocation(t_var *var)
+{
+	int					i;
+
+	var->fork_mutex = (pthread_mutex_t *) malloc(sizeof(pthread_mutex_t) \
+	* var->nbr_philos);
+	if (var->fork_mutex == NULL)
+	{
+		free(var);
+		return (NULL);
+	}
+	i = 0;
+	while (i < var->nbr_philos)
+	{
+		pthread_mutex_init(&var->fork_mutex[i], NULL);
+		i++;
+	}
+	return (var);
+}
+
 
 void	ft_leaks(void)
 {
