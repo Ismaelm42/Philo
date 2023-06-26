@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 11:12:13 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/26 14:03:41 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/26 16:49:54 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,12 @@ int	thread_init(t_philo *philo)
 	pthread_t	tracker;
 	int			i;
 
-	pthread_mutex_init(&philo->var->mutex, NULL);
-	pthread_mutex_init(&philo->var->counter_mutex, NULL);
-	pthread_mutex_init(&philo->var->flag_mutex, NULL);
-	pthread_create(&tracker, NULL, &tracker_routine, philo);
+	if (pthread_mutex_init(&philo->var->mutex, NULL) == -1 || \
+	pthread_mutex_init(&philo->var->counter_mutex, NULL) == -1 || \
+	pthread_mutex_init(&philo->var->flag_mutex, NULL) == -1)
+		return (2);
+	if (pthread_create(&tracker, NULL, &tracker_routine, philo) == -1)
+		return (EXIT_FAILURE);
 	gettimeofday(&philo->var->time.t_start, NULL);
 	i = 0;
 	while (i < philo->var->nbr_philos)
@@ -123,7 +125,11 @@ int	main(int argc, char **argv)
 	if (philo == NULL)
 		return (deallocate(philo, NULL), error(MEM_ERR));
 	if (thread_init(philo) != 0)
-		return (deallocate(philo, 0), error(THRD_ERR));
+	{
+		deallocate(philo, 0);
+		if ()
+		return (error(THRD_ERR));
+	}
 	deallocate(philo, NULL);
 	return (0);
 }

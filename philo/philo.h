@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 10:35:49 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/26 14:05:34 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/26 16:33:56 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,3 +82,5 @@ void		*tracker_routine(void *arg);
 void		*thread_routine(void *arg);
 
 #endif
+
+//Proteger el init_mutex y los pthread_create
