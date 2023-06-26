@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 13:10:34 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/22 15:59:21 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/26 12:59:01 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,18 +54,19 @@ long	get_time(t_philo *philo, struct timeval start, struct timeval end)
 	return (time);
 }
 
-void	add_delay(t_philo *philo, struct timeval start_time)
+void	add_delay(t_philo *philo, struct timeval start_time, int position)
 {
 	long	offset;
 
 	pthread_mutex_lock(&philo->var->mutex);
 	gettimeofday(&philo->delay_marker, NULL);
 	offset = get_time(philo, start_time, philo->delay_marker);
-	//philo->delay = (philo->var->time_to_death - philo->var->time_to_eat - offset) / 2;
-	philo->delay = (philo->var->time_to_eat / 2) - (offset / 2);
-	//Probar con porcentajes por lo del deadlock
-	if (philo->delay < 0)
+	philo->delay = (philo->var->time_to_death - \
+	philo->var->time_to_eat - offset) / 2;
+	if (position == 0 && philo->delay <= 0)
 		philo->delay = 1;
+	if (position == 1 && philo->delay <= 0)
+		philo->delay = 0;
 	pthread_mutex_unlock(&philo->var->mutex);
 	sleeper(philo, philo->delay);
 }

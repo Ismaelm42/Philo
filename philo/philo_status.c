@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:43:40 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/22 15:19:03 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/26 12:38:40 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,8 @@ void	thinking(t_philo *philo)
 	{
 		pthread_mutex_unlock(&philo->var->flag_mutex);
 		timestamp(philo, "is thinking");
-		add_delay(philo, philo->life_cycle->t_start);
+		add_delay(philo, philo->life_cycle->t_start, 1);
 	}
 	else
 		pthread_mutex_unlock(&philo->var->flag_mutex);
 }
-

@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 11:12:07 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/20 12:22:07 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/26 14:04:03 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ long	long_atoi(char *str, int *flag)
 		sum = sum * 10 + str[i] - '0';
 		i++;
 	}
+	if (sum > 10000 || sum < 0)
+		sum = 10000;
 	return (sum);
 }
 
@@ -78,10 +80,4 @@ t_var	*fork_mutex_allocation(t_var *var)
 		i++;
 	}
 	return (var);
-}
-
-
-void	ft_leaks(void)
-{
-	system("leaks -q philo");
 }

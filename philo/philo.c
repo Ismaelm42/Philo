@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 11:12:13 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/22 12:28:25 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/26 14:03:41 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_var	*struct_init_var(int argc, char **argv)
 	var->flag = 1;
 	var->eat_counter = 0;
 	var->nbr_philos = long_atoi(argv[1], &var->flag);
-	if (var->nbr_philos > 200)
+	if (var->nbr_philos > 200 || var->nbr_philos < 0)
 		var->nbr_philos = 200;
 	var->time_to_death = long_atoi(argv[2], &var->flag);
 	var->time_to_eat = long_atoi(argv[3], &var->flag);
@@ -112,7 +112,6 @@ int	main(int argc, char **argv)
 	t_var	*var;
 	t_philo	*philo;
 
-	atexit(ft_leaks);
 	if (argc < 5)
 		return (error(ARG_ERRN));
 	var = struct_init_var(argc, argv);

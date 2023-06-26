@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo_routine.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/26 10:47:54 by imoro-sa          #+#    #+#             */
+/*   Updated: 2023/06/26 12:38:01 by imoro-sa         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 int	eat_check(t_philo *philo)
@@ -41,20 +53,13 @@ void	*tracker_routine(void *arg)
 	return (NULL);
 }
 
-//puedo usar un mutex para routine pero para tracker, que comparte variables
-//con otros hilos, tengo que usar otros mutex para esas variables.
-//usleep protege get_time para que los tiempos no sean incongruentes.
-//Imperativo dejarlo.
-//Ya he comprobado muchas veces que si lo quito se va todo a la puta.
-
 void	*thread_routine(void *arg)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
 	if (philo->philo % 2 == 0)
-		add_delay(philo, philo->var->time.t_start);
-	//He cambiado el '% 2 != 0' a '== 0'
+		add_delay(philo, philo->var->time.t_start, 0);
 	while (1)
 	{
 		pthread_mutex_lock(&philo->var->flag_mutex);
