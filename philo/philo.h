@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 10:35:49 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/26 16:33:56 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/27 11:22:59 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,12 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-# define ARG_ERRN "invalid number of arguments\n"
-# define ARG_ERR "invalid arguments\n"
-# define THRD_ERR "thread failed\n"
-# define MEM_ERR "malloc allocation failed\n"
+# define ARG_ERRN "Invalid number of arguments\n"
+# define MEM_ERR "Malloc allocation failed\n"
+# define ARG_ERR "Invalid arguments\n"
+# define MTX_ERR "Mutex init failed\n"
+# define THRD_INIT_ERR "Thread init failed\n"
+# define THRD_JOIN_ERR "Thread join failed\n"
 
 typedef struct s_time
 {
@@ -73,7 +75,7 @@ void		timestamp(t_philo *philo, char *message);
 long		get_time(t_philo *philo, struct timeval start, struct timeval end);
 void		sleeper(t_philo *philo, long timer);
 void		add_delay(t_philo *philo, struct timeval start_time, int position);
-int			error(char *str);
+int			error(int id);
 long		long_atoi(char *str, int *flag);
 void		deallocate(t_philo *philo, t_var *var);
 t_var		*fork_mutex_allocation(t_var *var);
@@ -82,5 +84,3 @@ void		*tracker_routine(void *arg);
 void		*thread_routine(void *arg);
 
 #endif
-
-//Proteger el init_mutex y los pthread_create

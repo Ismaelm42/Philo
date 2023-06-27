@@ -6,7 +6,7 @@
 /*   By: imoro-sa <imoro-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 11:12:13 by imoro-sa          #+#    #+#             */
-/*   Updated: 2023/06/26 16:49:54 by imoro-sa         ###   ########.fr       */
+/*   Updated: 2023/06/27 11:07:05 by imoro-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,16 +69,16 @@ int	thread_init(t_philo *philo)
 	if (pthread_mutex_init(&philo->var->mutex, NULL) == -1 || \
 	pthread_mutex_init(&philo->var->counter_mutex, NULL) == -1 || \
 	pthread_mutex_init(&philo->var->flag_mutex, NULL) == -1)
-		return (2);
+		return (4);
 	if (pthread_create(&tracker, NULL, &tracker_routine, philo) == -1)
-		return (EXIT_FAILURE);
+		return (5);
 	gettimeofday(&philo->var->time.t_start, NULL);
 	i = 0;
 	while (i < philo->var->nbr_philos)
 	{
 		if (pthread_create(&philo[i].thread, NULL, \
 			&thread_routine, &philo[i]) == -1)
-			return (EXIT_FAILURE);
+			return (5);
 		i++;
 	}
 	return (thread_join(philo, tracker));
@@ -92,11 +92,11 @@ int	thread_join(t_philo *philo, pthread_t tracker)
 	while (i < philo->var->nbr_philos)
 	{
 		if (pthread_join(philo[i].thread, NULL) == -1)
-			return (EXIT_FAILURE);
+			return (6);
 		i++;
 	}
 	if (pthread_join(tracker, NULL) == -1)
-		return (EXIT_FAILURE);
+		return (6);
 	i = 0;
 	while (i < philo->var->nbr_philos)
 	{
@@ -106,30 +106,28 @@ int	thread_join(t_philo *philo, pthread_t tracker)
 	pthread_mutex_destroy(&philo->var->mutex);
 	pthread_mutex_destroy(&philo->var->counter_mutex);
 	pthread_mutex_destroy(&philo->var->flag_mutex);
-	return (EXIT_SUCCESS);
+	return (0);
 }
 
 int	main(int argc, char **argv)
 {
 	t_var	*var;
 	t_philo	*philo;
+	int		id;
 
 	if (argc < 5)
-		return (error(ARG_ERRN));
+		return (error(1));
 	var = struct_init_var(argc, argv);
 	if (var == NULL)
-		return (error(MEM_ERR));
+		return (error(2));
 	if (var->flag == -1 || var->nbr_philos == 0)
-		return (deallocate(0, var), error(ARG_ERR));
+		return (deallocate(0, var), error(3));
 	philo = struct_init_philo(var);
 	if (philo == NULL)
-		return (deallocate(philo, NULL), error(MEM_ERR));
-	if (thread_init(philo) != 0)
-	{
-		deallocate(philo, 0);
-		if ()
-		return (error(THRD_ERR));
-	}
+		return (deallocate(philo, NULL), error(2));
+	id = thread_init(philo);
+	if (id != 0)
+		return (deallocate(philo, 0), error(id));
 	deallocate(philo, NULL);
 	return (0);
 }
